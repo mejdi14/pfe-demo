@@ -19,7 +19,7 @@ import com.mostdanger.drawerdemo.R;
 public class HomeFragment extends Fragment implements OnMapReadyCallback{
 
     private HomeViewModel homeViewModel;
-
+    private MapView mapView;
 
     public View onCreateView(@NonNull LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
@@ -27,13 +27,27 @@ public class HomeFragment extends Fragment implements OnMapReadyCallback{
                 ViewModelProviders.of(this).get(HomeViewModel.class);
         View root = inflater.inflate(R.layout.fragment_home, container, false);
         final TextView textView = root.findViewById(R.id.text_home);
+        mapView = (MapView)root.findViewById(R.id.mapView);
         homeViewModel.getText().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(@Nullable String s) {
                 textView.setText(s);
             }
         });
+        initMap(savedInstanceState, mapView);
         return root;
+    }
+    
+    private void initMap(Bundle savedInstanceState, MapView mapView) {
+        mapView.onCreate(savedInstanceState);
+        mapView.getMapAsync(new OnMapReadyCallback() {
+
+            @Override
+            public void onMapReady(GoogleMap googleMap) {
+
+                mapView.onResume();
+            }
+        });
     }
 
     @Override
